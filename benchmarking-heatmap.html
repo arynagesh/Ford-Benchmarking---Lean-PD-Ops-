@@ -1,0 +1,312 @@
+<!-- filename: benchmarking-heatmap.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmarking Heat-Map — Companies × 12 Metrics</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dl-green:#86BC25; --dl-dark:#046A38; --dl-blue:#00A3E0; --dl-bluedk:#005587;
+    --leader:#046A38; --strong:#86BC25; --emerging:#E8A317; --lagging:#DA291C;
+    --ink:#2b2b2b; --muted:#6b6b6b; --bg:#f4f4f4; --line:#E6E6E6; --white:#fff;
+    --clusterA:#0033A0; --clusterB:#00A3E0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--ink);padding:28px 16px;line-height:1.4}
+  .deck{max-width:1320px;margin:0 auto}
+  h1{font-size:27px;font-weight:800;color:#141414}
+  h1 span{color:var(--muted);font-weight:700}
+  .sub{color:var(--muted);font-size:13px;margin:8px 0 16px;max-width:1040px}
+  .sub b{color:#3a3a3a}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:18px;align-items:center;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:11px 15px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.05);font-size:11px}
+  .lg{display:flex;align-items:center;gap:6px;color:#3a3a3a}
+  .sw{width:26px;height:15px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.08)}
+  .sw.lead{background:var(--leader)} .sw.str{background:var(--strong)} .sw.emg{background:var(--emerging)} .sw.lag{background:var(--lagging)}
+  .sw.na{background:#f0f0f0;border:1px dashed #c9c9c9}
+  .sw.prov{background:repeating-linear-gradient(45deg,#ecedf3,#ecedf3 4px,#dfe2ee 4px,#dfe2ee 8px);border:1px solid #c3c8dc}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .dot.hi{background:var(--dl-dark)} .dot.mid{background:var(--emerging)}
+  .lg b{color:#141414;font-weight:700}
+
+  /* table */
+  .wrap{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:1180px}
+  th,td{border:1px solid #ececec;text-align:center;vertical-align:middle}
+  thead .cluster th{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fff;padding:5px 4px}
+  .cA{background:var(--clusterA)} .cB{background:var(--clusterB)}
+  thead .cols th{font-size:9.5px;font-weight:700;color:#333;background:#fafafa;padding:6px 3px;line-height:1.15;height:56px}
+  thead .cols th .mn{display:block;font-size:8.5px;font-weight:800;color:var(--muted)}
+  th.corner{background:#141414;color:#fff;text-align:left;padding:8px 10px;font-size:11px;font-weight:800;min-width:118px}
+  td.co{text-align:left;padding:7px 10px;font-weight:800;font-size:12px;color:#141414;background:#fafafa;white-space:nowrap}
+  td.co small{display:block;font-weight:600;font-size:9.5px;color:var(--muted)}
+  td.co a{color:#141414;text-decoration:none;border-bottom:1.5px dotted var(--dl-dark)}
+  td.co a:hover{color:var(--dl-dark)}
+  td.co a::after{content:" \25B8";font-size:9px;color:var(--dl-dark);font-weight:900}
+
+  td.cell{position:relative;height:40px;font-size:9.5px;font-weight:800;color:#fff;letter-spacing:.3px}
+  td.lead{background:var(--leader)} td.str{background:var(--strong);color:#20340a} td.emg{background:var(--emerging);color:#3a2a00} td.lag{background:var(--lagging)}
+  td.na{background:#f6f6f6;color:#c2c2c2;font-weight:700;font-size:12px}
+  td.cell .cd{position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85)}
+  td.str .cd,td.emg .cd{border-color:rgba(0,0,0,.35)}
+  .cd.hi{background:var(--dl-dark)} .cd.mid{background:#fff}
+  td.str .cd.mid,td.emg .cd.mid{background:#7a5600}
+  /* enabler tag cell */
+  td.enab{background:#eef6fb;color:#005587;font-size:9px;font-weight:800;letter-spacing:.2px}
+  /* provisional Ford */
+  tr.ford td.co{background:#141414;color:#fff}
+  tr.ford td.co small{color:#c9c9c9}
+  td.prov{background:repeating-linear-gradient(45deg,#ecedf3,#ecedf3 5px,#e2e5ef 5px,#e2e5ef 10px);color:#5a6285;font-size:8.5px;font-weight:800;letter-spacing:.2px}
+  td.prov.pend{color:#9aa0b8;font-weight:700;font-style:italic}
+
+  /* cluster divider */
+  .divA{border-right:3px solid var(--clusterB)!important}
+
+  /* story + coverage */
+  .row2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
+  .panel{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .panel h3{font-size:13px;font-weight:800;color:#141414;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+  .panel h3::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--dl-dark)}
+  .panel p{font-size:11.5px;color:#3a3a3a;margin-bottom:8px}
+  .panel p b{color:#141414}
+  .cov{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+  .cov .big{font-size:30px;font-weight:800;color:var(--dl-dark);line-height:1}
+  .cov .lbl{font-size:11px;color:var(--muted)}
+  .covbar{height:9px;border-radius:5px;background:#eee;overflow:hidden;margin-top:6px}
+  .covbar>div{height:100%;background:var(--dl-green);border-radius:5px}
+  .flag{background:#eef7ef;border-left:3px solid var(--dl-dark);border-radius:0 4px 4px 0;padding:9px 12px;font-size:11px;color:#3a3a3a}
+  .flag.amber{background:#fff8ec;border-left-color:var(--emerging)}
+  .flag b{color:var(--dl-dark)} .flag.amber b{color:#a9760a}
+
+  .srckey{margin-top:14px;background:var(--white);border:1px solid var(--line);border-top:3px solid var(--dl-dark);border-radius:8px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .srckey h3{font-size:12px;font-weight:800;color:#141414;margin-bottom:8px}
+  .srcgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 26px;font-size:10.5px;color:#3a3a3a}
+  .srcgrid div{padding:2px 0}
+  .srcgrid .k{font-weight:800;color:#141414}
+  .cpill{display:inline-block;font-size:8.5px;font-weight:800;padding:1px 6px;border-radius:8px;margin-left:3px}
+  .cpill.hi{background:rgba(4,106,56,.12);color:var(--dl-dark)} .cpill.mid{background:#fff3dc;color:#a9760a}
+  .foot{margin-top:12px;font-size:10.5px;color:var(--muted)}
+  .foot b{color:#141414}
+  @media(max-width:960px){.row2{grid-template-columns:1fr}.srcgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="deck">
+  <h1>Benchmarking Heat-Map <span>| Companies &times; 12 Metrics</span></h1>
+  <p class="sub">Ratings are entered <b>only where we have a cited source</b>, each carrying its confidence class. Blank cells are not weaknesses &mdash; they are the <b>Step-4 research queue</b>. Ford is a <b>provisional pre-baseline row</b> (Step-5 not yet run): it shows the rubric&rsquo;s <em>expected</em> placements, never a scored result. Read the pattern: disruptors fill Cluster B (how they work); legacy OEMs fill Cluster A (what they built) &mdash; that contrast is the shift Ford has to make.</p>
+
+  <div class="legend">
+    <div class="lg"><span class="sw lead"></span><b>Leader</b></div>
+    <div class="lg"><span class="sw str"></span><b>Strong</b></div>
+    <div class="lg"><span class="sw emg"></span><b>Emerging</b></div>
+    <div class="lg"><span class="sw lag"></span><b>Lagging</b></div>
+    <div class="lg"><span class="sw na"></span>Research gap (Step 4)</div>
+    <div class="lg"><span class="sw prov"></span>Ford &mdash; baseline pending (Step 5)</div>
+    <div class="lg" style="margin-left:auto"><span class="dot hi"></span>🟢 indep / teardown / analyst / peer-review</div>
+    <div class="lg"><span class="dot mid"></span>🟡 vendor case / mgmt / estimate</div>
+  </div>
+
+  <div class="wrap">
+  <table>
+    <thead>
+      <tr class="cluster">
+        <th class="corner" rowspan="2">Company</th>
+        <th class="cA" colspan="7">Cluster A — What They Built</th>
+        <th class="cB" colspan="5">Cluster B — How They Work</th>
+      </tr>
+      <tr class="cols">
+        <th><span class="mn">M1</span>Platform Reuse</th>
+        <th><span class="mn">M2</span>Modularity</th>
+        <th><span class="mn">M3</span>Config Mgmt</th>
+        <th><span class="mn">M4</span>HW–SW Integ.</th>
+        <th><span class="mn">M5</span>SDV Maturity</th>
+        <th><span class="mn">M6</span>OTA</th>
+        <th class="divA"><span class="mn">M7</span>Integ. Services</th>
+        <th><span class="mn">M8</span>Speed / TTV</th>
+        <th><span class="mn">M9</span>Reuse & Rework</th>
+        <th><span class="mn">M10</span>Digital Thread / SSOT</th>
+        <th><span class="mn">M11</span>Enablers</th>
+        <th><span class="mn">M12</span>Feature-Driven Def.</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- TESLA -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#tesla" target="_blank">Tesla</a> <small>US · disruptor</small></td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell lead divA">LDR<span class="cd mid"></span></td>
+        <td class="cell lead">LDR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="enab">Culture / Talent</td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+      </tr>
+
+      <!-- BYD -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#byd" target="_blank">BYD</a> <small>CN · disruptor / scale</small></td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na divA">·</td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="enab">Culture / Talent</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+      </tr>
+
+      <!-- NIO -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#nio" target="_blank">NIO</a> <small>CN · digital-native</small></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell lead">LDR<span class="cd hi"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na divA">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="enab">Culture / Talent</td>
+        <td class="cell na">·</td>
+      </tr>
+
+      <!-- TOYOTA -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#toyota" target="_blank">Toyota</a> <small>JP · OEM leader (TNGA)</small></td>
+        <td class="cell lead">LDR<span class="cd mid"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na divA">·</td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="enab">Leadership</td>
+        <td class="cell na">·</td>
+      </tr>
+
+      <!-- VW -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#vw" target="_blank">VW</a> <small>DE · OEM leader (MQB)</small></td>
+        <td class="cell lead">LDR<span class="cd mid"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na divA">·</td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na">·</td>
+        <td class="enab">Capital / Finance</td>
+        <td class="cell na">·</td>
+      </tr>
+
+      <!-- HYUNDAI -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#hyundai" target="_blank">Hyundai</a> <small>KR · OEM leader (IMA)</small></td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na divA">·</td>
+        <td class="cell str">STR<span class="cd hi"></span></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="enab">Capital / Finance</td>
+        <td class="cell na">·</td>
+      </tr>
+
+      <!-- BMW -->
+      <tr>
+        <td class="co"><a href="benchmarking-evidence-detail.html#bmw" target="_blank">BMW</a> <small>DE · mid-transformation</small></td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="cell na divA">·</td>
+        <td class="cell na">·</td>
+        <td class="cell na">·</td>
+        <td class="cell str">STR<span class="cd mid"></span></td>
+        <td class="enab">Leadership</td>
+        <td class="cell na">·</td>
+      </tr>
+
+      <!-- FORD provisional -->
+      <tr class="ford">
+        <td class="co"><a href="benchmarking-evidence-detail.html#ford" target="_blank">Ford</a> <small>subject · baseline pending</small></td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend">pending</td>
+        <td class="prov pend divA">pending</td>
+        <td class="prov">exp: LAG/EMG</td>
+        <td class="prov">exp: LAG</td>
+        <td class="prov">exp: LAG</td>
+        <td class="prov pend">TBD</td>
+        <td class="prov">exp: LAG</td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="row2">
+    <div class="panel">
+      <h3>What the pattern says</h3>
+      <p><b>Two diagonal blocks, not a full grid.</b> Disruptors and digital-natives (Tesla, BYD, NIO) concentrate in <b>Cluster B</b> — SDV, OTA, speed, feature-driven definition. Legacy platform leaders (Toyota, VW, Hyundai) concentrate in <b>Cluster A</b> — platform reuse, modularity, part carryover — and go blank across Cluster B. BMW is the visible mid-transformation case, building Cluster-B strength off a legacy base.</p>
+      <p><b>Ford's move is horizontal.</b> As a legacy OEM, Ford's credible strengths sit in Cluster A; the gap-closing thesis is about acquiring Cluster-B capability (single source of truth, feature-first definition) that the disruptors already hold. The heat-map makes that direction of travel literal.</p>
+      <div class="flag amber"><b>Read the confidence dots, not just the colors.</b> Legacy Cluster-A ratings lean 🟡 (mgmt/analyst estimates: TNGA, MQB). Disruptor Cluster-B ratings lean 🟢 (teardown + independent analyst indices). The evidence base is uneven by design — corroborate 🟡 cells before they anchor a recommendation.</div>
+    </div>
+    <div class="panel">
+      <h3>Evidence coverage</h3>
+      <div class="cov">
+        <div class="big">33 / 77</div>
+        <div class="lbl">scoreable cells evidenced<br>(7 companies × 11 rated metrics; M11 is an archetype tag)</div>
+      </div>
+      <div class="covbar"><div style="width:43%"></div></div>
+      <p style="margin-top:10px"><b>~43% populated.</b> The remaining ~57% is the explicit Step-4 research backlog — heaviest on legacy OEMs' Cluster-B cells (SDV, OTA, feature definition) and on config-management / digital-thread scores across the board.</p>
+      <div class="flag"><b>Governance:</b> no Ford cell is scored until the Step-5 baseline runs on the same locked rubric. &ldquo;exp:&rdquo; hints reproduce the rubric's stated expectations only — they are hypotheses to be tested, not findings.</div>
+    </div>
+  </div>
+
+  <div class="srckey">
+    <h3>Source key — what backs each scored cell</h3>
+    <div class="srcgrid">
+      <div><span class="k">Tesla</span> M1 gigacasting — Caresoft teardown/Automotive News<span class="cpill hi">🟢</span>; M5 — Gartner + S&amp;P Global Mobility + IMD<span class="cpill hi">🟢</span>; M6,7,12 — 10-K/Morgan Stanley<span class="cpill mid">🟡</span></div>
+      <div><span class="k">BYD</span> M1,2 CTB/8-in-1 — BYD disclosures, cross-reported<span class="cpill mid">🟡</span>; M1 also peer-reviewed CTB review<span class="cpill hi">🟢</span>; M5 — IMD Future Readiness (NOT Gartner top-3)<span class="cpill hi">🟢</span></div>
+      <div><span class="k">NIO</span> M3,8,10 3DEXPERIENCE/ENOVIA case<span class="cpill mid">🟡</span>; M4 ET9 SDV Level-5 — S&amp;P Global Mobility<span class="cpill hi">🟢</span>; M5 — Gartner #2<span class="cpill hi">🟢</span></div>
+      <div><span class="k">Toyota</span> M1 70–80% commonality, M2, M9 carryover — TNGA disclosures<span class="cpill mid">🟡</span></div>
+      <div><span class="k">VW</span> M1 88% fewer powertrain combos, M2, M9 — Morgan Stanley / MQB<span class="cpill mid">🟡</span></div>
+      <div><span class="k">Hyundai</span> M1 80+ modules, M2, M8 30% faster dev — IMA disclosures<span class="cpill hi">🟢</span></div>
+      <div><span class="k">BMW</span> M4,10 iFACTORY 4wk→3d; M5 Neue Klasse; M6 — tech-day disclosures / Wards<span class="cpill mid">🟡</span></div>
+      <div><span class="k">M12 anchor</span> feature-driven SE (INCOSE, peer-reviewed<span class="cpill hi">🟢</span>) + feature-based PLE at GM (BigLever<span class="cpill mid">🟡</span>)</div>
+    </div>
+    <div class="foot"><b>Click any company name</b> to open the full Evidence Detail page — every rated cell traced to its actual data points, confidence-classed, with thin cells flagged rather than padded. <b>Sourcing note (pre-COO):</b> confidence dots mark 🟢 independent/teardown/analyst/peer-reviewed vs 🟡 vendor case/mgmt/estimate. Blank = not yet researched (Step 4). Ford = baseline pending (Step 5); no internal figure quoted before validation. Metric 9 rated on its part-reuse facet (9a) where carryover data exists; rework (9b) unscored pending research. Full URLs live in the standing Source Register — citation, no live link.</div>
+  </div>
+</div>
+</body>
+</html>

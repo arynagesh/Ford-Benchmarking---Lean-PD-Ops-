@@ -1,0 +1,333 @@
+<!-- filename: benchmarking-evidence-detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence Detail — What's Behind Each Heat-Map Rating</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#046A38; --green:#86BC25; --ink:#1B1B1B; --mute:#6B6B6B; --line:#E6E6E6;
+    --leader:#046A38; --strong:#86BC25; --emerging:#E8A317; --lagging:#DA291C;
+    --hi:#046A38; --mid:#E8A317; --bg:#f6f7f8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  .wrap{max-width:1080px;margin:0 auto;padding:30px 22px 70px}
+  h1{font-size:25px;font-weight:800}
+  .sub{color:var(--mute);font-size:13px;margin:8px 0 18px;max-width:820px}
+  .sub b{color:#333}
+
+  .keybar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:11.5px}
+  .keybar .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+
+  .nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px;position:sticky;top:0;background:var(--bg);
+    padding:10px 0;z-index:5}
+  .nav a{font-size:11.5px;font-weight:700;color:#fff;background:#2b2b2b;padding:6px 12px;border-radius:16px;
+    text-decoration:none}
+  .nav a:hover{background:var(--dark)}
+  .nav a.ford{background:#7a2020}
+
+  .company{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin-bottom:20px;
+    box-shadow:0 1px 4px rgba(0,0,0,.05);scroll-margin-top:70px}
+  .cohead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;flex-wrap:wrap;gap:8px}
+  .cohead h2{font-size:19px;font-weight:800}
+  .cohead .arch{font-size:11px;font-weight:700;color:#fff;background:var(--dark);padding:3px 10px;border-radius:12px}
+  .cosub{color:var(--mute);font-size:12px;font-style:italic;margin-bottom:16px}
+
+  .mcard{border:1px solid var(--line);border-radius:8px;padding:13px 15px;margin-bottom:12px;background:#fcfcfc}
+  .mcard.thin{background:#fffaf1;border-color:#f0dfb8}
+  .mhead{display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap}
+  .mnum{font-size:10.5px;font-weight:800;color:#fff;background:#555;padding:2px 7px;border-radius:4px}
+  .mname{font-size:14px;font-weight:800;color:var(--ink)}
+  .rate{font-size:10.5px;font-weight:800;color:#fff;padding:2px 9px;border-radius:10px;margin-left:auto}
+  .r-lead{background:var(--leader)} .r-str{background:var(--strong);color:#20340a}
+  .r-emg{background:var(--emerging);color:#3a2a00} .r-lag{background:var(--lagging)}
+
+  .pt{display:flex;gap:8px;padding:5px 0;font-size:12.5px;color:#2b2b2b}
+  .pt .d{width:8px;height:8px;border-radius:50%;flex:0 0 8px;margin-top:5px}
+  .pt .src{color:var(--mute);font-size:11px;display:block;margin-top:1px}
+  .net{margin-top:9px;padding-top:8px;border-top:1px dashed #ddd;font-size:12px;color:#333}
+  .net b{color:var(--dark)}
+  .thinflag{font-size:10.5px;font-weight:700;color:#a9760a;margin-top:6px}
+  .corr{font-size:10.5px;color:#a94040;font-weight:700;margin-top:6px}
+
+  .prov-box{background:#1b1b1b;color:#fff;border-radius:8px;padding:16px 20px;margin-top:6px}
+  .prov-box h3{font-size:14px;margin-bottom:6px}
+  .prov-box p{font-size:12px;color:#cfcfcf}
+
+  .backlink{display:inline-block;margin-top:26px;font-size:12px;color:var(--dark);font-weight:700;text-decoration:none}
+  .foot{margin-top:28px;font-size:10.5px;color:var(--mute);background:#fff;border:1px solid var(--line);
+    border-radius:8px;padding:12px 16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Evidence Detail &mdash; what&rsquo;s behind each heat-map rating</h1>
+  <p class="sub">Linked from the benchmarking heat-map. Each rated cell traces to the <b>actual data points</b> used to set it &mdash; not just a color and a confidence dot. Where a rating rests on fewer than three points, that&rsquo;s flagged rather than padded. Corrections found while sourcing this page are called out explicitly.</p>
+
+  <div class="keybar">
+    <span><span class="dot" style="background:var(--hi)"></span><b>Green</b> &mdash; independent / teardown / analyst / peer-reviewed</span>
+    <span><span class="dot" style="background:var(--mid)"></span><b>Amber</b> &mdash; vendor case / management claim / estimate</span>
+  </div>
+
+  <div class="nav">
+    <a href="#tesla">Tesla</a><a href="#byd">BYD</a><a href="#nio">NIO</a><a href="#toyota">Toyota</a>
+    <a href="#vw">VW</a><a href="#hyundai">Hyundai</a><a href="#bmw">BMW</a><a href="#ford" class="ford">Ford</a>
+  </div>
+
+  <!-- ===================== TESLA ===================== -->
+  <div class="company" id="tesla">
+    <div class="cohead"><h2>Tesla</h2><span class="arch">Disruptor</span></div>
+    <div class="cosub">Strongest, most independently-evidenced company in the set &mdash; teardown data plus three separate analyst indices.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M1</span><span class="mname">Platform Reuse</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Model Y built with <b>360 fewer parts</b> than a comparable traditionally-built vehicle.<span class="src">Terry Woychowski, Caresoft Global teardown &mdash; via Automotive News, 2026</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Gigacasting replaces roughly <b>400 individual underbody parts</b> with 2&ndash;3 large single-piece castings (front/rear, and historically attempted full-underbody).<span class="src">Reuters reporting, multiple teardown-adjacent outlets, 2023&ndash;2024</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>2024: Tesla paused its next-gen <em>single-piece</em> full-underbody casting plan, reverting to the proven 3-piece method &mdash; a real capability limit, not just upside.<span class="src">Reuters / CNBC, May 2024</span></div></div>
+      <div class="net"><b>Net:</b> rated Strong, not Leader &mdash; the 2024 pullback shows a genuine ceiling on how far the mechanism currently scales.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M5</span><span class="mname">SDV Maturity</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>#1 of 24 automakers on Gartner&rsquo;s <b>2025 Digital Automaker Index</b>, scoring 79.3% &mdash; 3rd consecutive year at the top, +2pp year-on-year.<span class="src">Gartner, via Automotive News &amp; Automotive News Europe, Aug 2025</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Named the most <b>SDV-ready</b> production model for 2025 in a separate S&amp;P Global Mobility study.<span class="src">S&amp;P Global Mobility, June 2025</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>#1 on IMD&rsquo;s 2026 Future Readiness Indicator (auto sector) with a <b>perfect 100.0</b>, reclaiming the top spot from BYD (96.0).<span class="src">IMD Future Readiness Indicator, May 2026</span></div></div>
+      <div class="net"><b>Net:</b> three independent analyst sources agree &mdash; the strongest-evidenced cell on the board.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M6</span><span class="mname">OTA</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div><b>$1.73B in deferred revenue</b> tied to FSD, connectivity and OTA features, disclosed in Tesla&rsquo;s 2019 Form 10-K.<span class="src">Tesla 2019 10-K (SEC filing)</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Morgan Stanley (A. Jonas) bull case: software could reach roughly <b>50% of gross profitability</b> vs. under 5% of revenue at the time.<span class="src">Morgan Stanley analyst estimate</span></div></div>
+      <div class="thinflag">Thin: 2 points. Both are financial/analyst framing of OTA <em>monetization</em>; we do not have an independent technical audit of Tesla&rsquo;s OTA update mechanism itself (frequency, ECU coverage) to add a third, different-source point.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M8</span><span class="mname">Speed / Time-to-Value</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>&ldquo;Unboxed&rdquo; modular assembly process (parallel sub-assembly rather than a single line) targeted at up to <b>50% lower production cost</b> for the next-gen small-vehicle platform.<span class="src">Tesla investor communications, via TechRadar reporting</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Parts-count reduction from gigacasting (360 fewer parts, above) mechanically shortens assembly steps and line time.<span class="src">Caresoft teardown, cross-referenced with M1</span></div></div>
+      <div class="thinflag">Thin: 2 points, and the first overlaps M1&rsquo;s mechanism. Treat this rating as directional pending a dedicated assembly time-study.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M12</span><span class="mname">Feature-Driven Definition</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Gartner 2025 index gave Tesla its <b>highest marks in the &ldquo;culture and leadership&rdquo;</b> category &mdash; the organizational precondition for feature-first definition.<span class="src">Gartner Digital Automaker Index 2025</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>OTA feature monetization ($1.73B deferred revenue, above) is the commercial signature of a feature-structured product definition.<span class="src">Tesla 2019 10-K</span></div></div>
+      <div class="corr">Correction from an earlier draft: this cell is <em>not</em> backed by BYD-style CTB/platform evidence &mdash; that mechanism belongs to M1/M4, not M12. Kept to genuinely feature/culture-relevant sources only.</div>
+    </div>
+  </div>
+
+  <!-- ===================== BYD ===================== -->
+  <div class="company" id="byd">
+    <div class="cohead"><h2>BYD</h2><span class="arch">Scale disruptor</span></div>
+    <div class="cosub">Strong hardware-integration evidence (mostly vendor-disclosed, cross-corroborated); its top-line ranking claim needed a correction.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M1</span><span class="mname">Platform Reuse</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Cell-to-Body (CTB) architecture: battery pack doubles as the floor structure, cutting body height by <b>10&ndash;15mm</b> and eliminating a separate battery enclosure.<span class="src">BYD technical disclosures, cross-reported by EVWorld, Frontiers review</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Torsional stiffness of <b>40,500 Nm/degree</b> in the Seal &mdash; rivaling premium sedans &mdash; from structural battery integration.<span class="src">BYD spec sheet, cross-reported</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Peer-reviewed review confirms CTP-to-CTB evolution improved volume utilization <b>15&ndash;20%</b> industry-wide, with BYD as the lead implementer.<span class="src">Frontiers in Mechanical Engineering, 2026 (academic review)</span></div></div>
+      <div class="net"><b>Net:</b> mostly vendor-disclosed specs, but independently corroborated across multiple outlets and one peer-reviewed academic review &mdash; solid for Leader.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M2</span><span class="mname">Modularity</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div><b>8-in-1 electric powertrain</b> integrates motor, reducer, and six other components into one assembly, deployed across Dolphin, Atto 3, and Seal.<span class="src">BYD e-Platform 3.0 disclosures</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Same e-Platform 3.0 architecture spans hatchback, crossover, and sports-sedan body styles from one shared Blade Battery + CTB + 8-in-1 kit.<span class="src">BYD product documentation</span></div></div>
+      <div class="thinflag">Thin: 2 points, both BYD-disclosed. No independent teardown of the 8-in-1 unit itself was found to corroborate the integration claim beyond BYD&rsquo;s own spec.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M4</span><span class="mname">HW&ndash;SW Integration</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>CTB structural integration (above) extends to thermal management, folding battery control into the vehicle&rsquo;s structural/software stack rather than a bolt-on module.<span class="src">BYD e-Platform 3.0 technical brief</span></div></div>
+      <div class="thinflag">Thin: 1 point found. This rating should be treated as provisional until DiPilot/ADAS-stack-specific sourcing is added &mdash; flagged for Step-4 follow-up, not currently defensible as Strong on this evidence alone.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M5</span><span class="mname">SDV Maturity</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>#2 on IMD&rsquo;s 2026 Future Readiness Indicator (96.0, close behind Tesla&rsquo;s 100.0); led the same index outright in 2025.<span class="src">IMD Future Readiness Indicator, 2025 &amp; 2026 editions</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>R&amp;D intensity growing at a <b>23.35% CAGR</b>, with 1,880 new patent authorizations in the most recent year (+113.6% YoY).<span class="src">IMD Future Readiness Indicator commentary, 2025</span></div></div>
+      <div class="corr">Correction from an earlier draft: BYD is <b>not</b> in Gartner&rsquo;s top 3 (that&rsquo;s Tesla, NIO, Xiaomi). BYD&rsquo;s ranking evidence now rests on IMD only &mdash; removed the incorrect Gartner attribution.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M8</span><span class="mname">Speed / Time-to-Value</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>Revenue growth of <b>52.8% (3-yr CAGR)</b> alongside an inventory turnover ratio of 6.17 &mdash; read as an operating-speed proxy by IMD&rsquo;s analysts.<span class="src">IMD Future Readiness Indicator, 2025</span></div></div>
+      <div class="thinflag">Thin: 1 point, and it is a financial-operations proxy for development/production speed, not a direct time-to-market metric. Flagged for a more direct source in Step 4.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M12</span><span class="mname">Feature-Driven Definition</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>IMD explicitly credits BYD&rsquo;s rise to compounding capability-building (batteries &rarr; drivetrains &rarr; systems integration) rather than single-feature bets &mdash; a systems/architecture reading, not yet a feature-catalog one.<span class="src">IMD Future Readiness commentary, 2025</span></div></div>
+      <div class="thinflag">Thin and indirect: 1 point. We found strong platform/hardware evidence for BYD but no source describing a feature-first <em>product definition process</em> specifically (the GM/BigLever-style mechanism evidence that anchors this metric elsewhere). Rating should be treated as the softest on BYD&rsquo;s row.</div>
+    </div>
+  </div>
+
+  <!-- ===================== NIO ===================== -->
+  <div class="company" id="nio">
+    <div class="cohead"><h2>NIO</h2><span class="arch">Digital-native</span></div>
+    <div class="cosub">One well-documented vendor case (digital thread) anchors most of this row; other cells lean on the same source family.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M3</span><span class="mname">Configuration Management</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Migrated to Dassault Syst&egrave;mes&rsquo; 3DEXPERIENCE / ENOVIA PLM in a <b>4-month platform switch</b>, giving real-time data access regardless of engineer location.<span class="src">Dassault Syst&egrave;mes case coverage, 2026</span></div></div>
+      <div class="thinflag">Thin: 1 point, vendor-case only. No independent audit of NIO&rsquo;s configuration-management practice was found.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M4</span><span class="mname">HW&ndash;SW Integration</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>NIO&rsquo;s ET9 was the only vehicle industry-wide to reach <b>Level 5</b> (the top tier) on S&amp;P Global Mobility&rsquo;s Software-Defined Vehicle Capability Framework.<span class="src">S&amp;P Global Mobility, cited in Gartner index coverage, 2025</span></div></div>
+      <div class="thinflag">Thin: 1 point. Strong single fact, but only one independent source found for this cell.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M5</span><span class="mname">SDV Maturity</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>#2 of 24 on Gartner&rsquo;s 2025 Digital Automaker Index at 77% &mdash; the only company besides Tesla and Xiaomi in the top tier.<span class="src">Gartner Digital Automaker Index 2025</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>ET9&rsquo;s Level-5 SDV rating (above) independently corroborates the Gartner placement from a different analyst house.<span class="src">S&amp;P Global Mobility, 2025</span></div></div>
+      <div class="net"><b>Net:</b> two independent analyst sources agree &mdash; solid Leader rating.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M8</span><span class="mname">Speed / Time-to-Value</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Full-vehicle 3D model load time cut from <b>3 hours to 15 minutes</b> after the PLM migration &mdash; directly speeds design-review cycles.<span class="src">Dassault Syst&egrave;mes case coverage, 2026</span></div></div>
+      <div class="thinflag">Thin: 1 point, same vendor-case family as M3. This is a real, specific, attributable number, but it is a single source repeated across two cells (M3, M8) &mdash; noted so it isn&rsquo;t mistaken for independent corroboration.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M10</span><span class="mname">Digital Thread / SSOT</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Single ENOVIA-based environment gives engineers, external partners, and manufacturing sites access to <b>the same live vehicle data</b>, regardless of location.<span class="src">Dassault Syst&egrave;mes case coverage, 2026</span></div></div>
+      <div class="thinflag">Thin: 1 point, same source family as M3/M8. This is the strongest single case study on the board (it is the D5 anchor for the whole Digital Backbone thesis) but it is still one company's account of its own migration &mdash; corroborate independently before over-weighting.</div>
+    </div>
+  </div>
+
+  <!-- ===================== TOYOTA ===================== -->
+  <div class="company" id="toyota">
+    <div class="cohead"><h2>Toyota</h2><span class="arch">Legacy leader &mdash; TNGA</span></div>
+    <div class="cosub">Mgmt-disclosed platform targets, consistently repeated across independent trade press for a decade &mdash; but never independently audited.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M1</span><span class="mname">Platform Reuse</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>TNGA targets <b>70&ndash;80% part commonality</b> for vehicles sharing a platform.<span class="src">Toyota disclosures, cross-reported</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Vehicles cost <b>20% less to produce</b> than on Toyota&rsquo;s prior (pre-TNGA) platforms.<span class="src">Toyota disclosures, via Wikipedia/press synthesis</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Six platform variants (TNGA-B/C/K/L/F, e-TNGA) span from subcompact to full-size body-on-frame, all sharing the commonality targets above.<span class="src">Toyota Newsroom Europe; platform documentation</span></div></div>
+      <div class="net"><b>Net:</b> 3 points, all ultimately traceable to Toyota&rsquo;s own disclosures (repeated consistently since 2015) &mdash; solid for directional confidence but not independently audited. Rated Leader on commonality depth, not on evidence tier.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M2</span><span class="mname">Modularity</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Standardized seat-height positions (up to 5 heights) let sporty coupes, sedans, and SUVs share one interior component set.<span class="src">Toyota UK Magazine engineering brief</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>TNGA targets a <b>20&ndash;30% improvement</b> in development efficiency from standardized, scalable wheelbase/track-width geometry.<span class="src">Toyota disclosures, cross-reported</span></div></div>
+      <div class="net"><b>Net:</b> 2 points, both management-disclosed. No independent teardown of TNGA-shared modules was located.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M9</span><span class="mname">Reuse &amp; Rework</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Toyota states TNGA reduces vehicle-development manpower requirements by <b>20%</b>.<span class="src">Toyota Newsroom Europe</span></div></div>
+      <div class="thinflag">Thin: 1 point, management-disclosed only.</div>
+    </div>
+  </div>
+
+  <!-- ===================== VW ===================== -->
+  <div class="company" id="vw">
+    <div class="cohead"><h2>Volkswagen</h2><span class="arch">Legacy leader &mdash; MQB</span></div>
+    <div class="cosub">The oldest and most-repeated modular-platform case in the industry; figures are consistent across a decade of independent trade coverage.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M1</span><span class="mname">Platform Reuse</span><span class="rate r-lead">LEADER</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>MQB achieves <b>70&ndash;80% part sharing</b> across a floor pan spanning A- through D-segment cars and compact SUVs.<span class="src">Industry platform-strategy coverage (GeelyJordan, CarExpert)</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>~<b>$8 billion</b> invested developing the platform and its first-generation vehicles (Golf Mk7, 2012).<span class="src">Wikipedia/HandWiki, sourced to VW disclosures</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Standardized engine-mounting core works across gasoline, diesel, CNG, hybrid, and full-electric drivetrains on the same tooling.<span class="src">HandWiki engineering summary</span></div></div>
+      <div class="net"><b>Net:</b> 3 points, management-disclosed / trade-press repeated, consistent for over a decade &mdash; solid directional confidence, no independent teardown found.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M2</span><span class="mname">Modularity</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div><b>20% lower production and tooling cost</b> per unit vs. prior non-modular architectures.<span class="src">Grokipedia synthesis of VW disclosures</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Assembly time cut by up to <b>30%</b> via standardized jigs, fixtures, and robotic systems usable across models.<span class="src">Car Magazine / HandWiki, sourced to VW R&amp;D</span></div></div>
+      <div class="net"><b>Net:</b> 2 points, consistent across multiple independent trade outlets citing the same VW-disclosed figures.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M9</span><span class="mname">Reuse &amp; Rework</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Build-time reduction of up to <b>30%</b> from the standardized parts bin (same fact as M2&rsquo;s assembly-time point, applied to development throughput).<span class="src">Car Magazine, cross-referenced with M2</span></div></div>
+      <div class="thinflag">Thin: 1 point, and it overlaps M2&rsquo;s source. Flagged rather than treated as independent corroboration.</div>
+    </div>
+  </div>
+
+  <!-- ===================== HYUNDAI ===================== -->
+  <div class="company" id="hyundai">
+    <div class="cohead"><h2>Hyundai</h2><span class="arch">Legacy leader &mdash; IMA</span></div>
+    <div class="cosub">Newest platform case in the set (announced 2023, first models 2025+); figures are investor-day disclosures, corroborated across five independent outlets.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M1</span><span class="mname">Platform Reuse</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div><b>Over 80 common modules</b> usable across every segment (small hatchback to full-size SUV/pickup and Genesis flagships), vs. today&rsquo;s E-GMP which only shares parts within one platform tier.<span class="src">Hyundai Motor Way Investor Day 2023 &mdash; corroborated by CleanTechnica, autoevolution, InsideEVs, Hyundai Australia press</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div><b>9 standardized battery packs</b> and <b>5 standardized motors</b> cover the entire future lineup (vs. a bespoke pack per model today).<span class="src">Hyundai Motor Way Investor Day 2023, same corroboration set</span></div></div>
+      <div class="net"><b>Net:</b> 2 points, management-disclosed but independently repeated across 5 separate trade/analyst outlets with identical figures &mdash; unusually well corroborated for a mgmt claim.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M2</span><span class="mname">Modularity</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>13 dedicated EV models across Hyundai, Kia, and Genesis will share the IMA module set through 2030 &mdash; the widest cross-brand span in this benchmark set.<span class="src">Hyundai Investor Day 2023</span></div></div>
+      <div class="thinflag">Thin: 1 point beyond M1&rsquo;s module-count fact, though independently corroborated.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M8</span><span class="mname">Speed / Time-to-Value</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--hi)"></span><div>IMA is projected to cut development time by up to <b>30%</b> via standardized wiring and shared modules.<span class="src">CleanTechnica / CarBuzz, sourced to Hyundai Investor Day 2023</span></div></div>
+      <div class="thinflag">Thin: 1 point, management-disclosed (well corroborated across outlets, but all point back to the same 2023 investor day).</div>
+    </div>
+  </div>
+
+  <!-- ===================== BMW ===================== -->
+  <div class="company" id="bmw">
+    <div class="cohead"><h2>BMW</h2><span class="arch">Mid-transformation case</span></div>
+    <div class="cosub">Best-documented production-side digital-twin case in the set &mdash; official BMW disclosures, corroborated by four independent trade outlets with matching figures.</div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M4</span><span class="mname">HW&ndash;SW Integration</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Virtual Factory links building, equipment, logistics, and vehicle data into one digital-twin environment across <b>30+ production sites</b>.<span class="src">BMW Group press release, June 2025; corroborated by CIO, ASSEMBLY, just-auto</span></div></div>
+      <div class="net"><b>Net:</b> 1 point, but it's an official corporate disclosure independently repeated with matching figures across 4 separate trade outlets &mdash; treat as well-corroborated mgmt claim.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M5</span><span class="mname">SDV Maturity</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Neue Klasse platform (2025+) is BMW&rsquo;s first ground-up software-defined architecture, integrated into the same Virtual Factory planning system as legacy models.<span class="src">BMW Group iFACTORY disclosures</span></div></div>
+      <div class="thinflag">Thin: 1 point. Neue Klasse is too new for independent SDV-maturity rankings (Gartner/IMD) to have scored it yet &mdash; flagged for Step-4 follow-up once those rankings catch up.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M6</span><span class="mname">OTA</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Shopfloor.Digital, a globally standardized cloud-based production-IT layer, is described as OTA-updatable across all 30+ plants.<span class="src">BMW Group production disclosures</span></div></div>
+      <div class="thinflag">Thin: 1 point, and it describes manufacturing-IT OTA, not vehicle-software OTA &mdash; a narrower claim than the Tesla/NIO cells in this column. Flagged so the rating isn&rsquo;t read as equivalent in kind.</div>
+    </div>
+
+    <div class="mcard">
+      <div class="mhead"><span class="mnum">M10</span><span class="mname">Digital Thread / SSOT</span><span class="rate r-str">STRONG</span></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Automated collision-check simulation cut from <b>nearly 4 weeks to 3 days</b>.<span class="src">BMW Group press release, June 2025; corroborated by ASSEMBLY, just-auto, ProcessExcellence Network</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Paint-line body simulations cut from up to <b>12 weeks to 1&ndash;2 weeks</b>.<span class="src">CIO, May 2025, sourced to BMW iFACTORY disclosures</span></div></div>
+      <div class="pt"><span class="d" style="background:var(--mid)"></span><div>Projected <b>up to 30% reduction</b> in production-planning costs once the Virtual Factory scales across all sites; over 8,000 physical objects RFID-tagged into the digital twin.<span class="src">BMW Group press release; BMW Group corporate site</span></div></div>
+      <div class="net"><b>Net:</b> 3 points, official disclosure but independently repeated with matching figures across at least 4 separate outlets (CIO, ASSEMBLY, just-auto, ProcessExcellence Network) &mdash; the best-corroborated Strong rating on the board.</div>
+    </div>
+  </div>
+
+  <!-- ===================== FORD ===================== -->
+  <div class="company" id="ford">
+    <div class="cohead"><h2>Ford</h2><span class="arch">Baseline pending</span></div>
+    <div class="cosub">No evidence cards for Ford. This is deliberate.</div>
+    <div class="prov-box">
+      <h3>Why there's nothing to click through to here</h3>
+      <p>Every other company on this page is scored from external, publicly available evidence. Ford is the <b>subject</b> of the benchmarking exercise, not a comparator &mdash; its row will be populated by the Step-5 internal baseline, run against this same locked rubric, not by web research. The heat-map's "exp: LAG" hints are the rubric's stated expectations, not findings, and none of them will convert to a rated cell until that baseline exists. Publishing placeholder Ford evidence here would blur exactly the line this project is built to protect &mdash; no internal figure gets quoted before it's actually measured.</p>
+    </div>
+  </div>
+
+  <div class="foot"><b>Methodology note:</b> every point above was verified via web search while building this page (not carried forward from memory). Two attribution errors were caught and corrected in the process &mdash; both flagged inline rather than silently fixed, since a COO-facing document should show its own error-correction, not just its conclusions. Points repeating the same underlying source across multiple cells for one company are labeled, so repetition isn't mistaken for independent corroboration.</div>
+
+  <a class="backlink" href="benchmarking-heatmap.html" target="_blank">&larr; Back to the heat-map</a>
+</div>
+</body>
+</html>
