@@ -1,0 +1,270 @@
+<!-- filename: metric-evidence-registry.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metric Evidence Registry — Every Metric × Every Company</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dl-green:#86BC25; --dl-dark:#046A38; --dl-blue:#00A3E0; --dl-bluedk:#005587;
+    --leader:#046A38; --strong:#86BC25; --emerging:#E8A317; --lagging:#DA291C;
+    --ink:#2b2b2b; --muted:#6b6b6b; --bg:#f4f4f4; --line:#E6E6E6; --white:#fff;
+    --hi:#046A38; --mid:#E8A317;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--ink);padding:30px 16px;line-height:1.45}
+  .deck{max-width:1320px;margin:0 auto}
+  h1{font-size:26px;font-weight:800;color:#141414}
+  h1 span{color:var(--muted);font-weight:700}
+  .sub{color:var(--muted);font-size:13px;margin:8px 0 16px;max-width:1020px}
+  .sub b{color:#3a3a3a}
+
+  .keybar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:var(--white);border:1px solid var(--line);
+    border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:11px}
+  .keybar .sw{width:20px;height:13px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:middle}
+  .keybar .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+
+  .nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5}
+  .nav a{font-size:10.5px;font-weight:700;color:#fff;background:#2b2b2b;padding:5px 10px;border-radius:14px;text-decoration:none}
+  .nav a:hover{background:var(--dl-dark)}
+
+  .metric{background:var(--white);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);scroll-margin-top:56px}
+  .mhead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .mnum{font-size:11px;font-weight:800;color:var(--dl-dark)}
+  .mname{font-size:15.5px;font-weight:800;color:#141414}
+  .mdef{font-size:11px;color:var(--muted);margin-bottom:12px;max-width:1000px}
+
+  .tiers4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .tiers3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .tiercol{border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .tierhead{font-size:10.5px;font-weight:800;color:#fff;text-align:center;padding:5px;letter-spacing:.3px}
+  .th-lead{background:var(--leader)} .th-str{background:var(--strong);color:#20340a}
+  .th-emg{background:var(--emerging);color:#3a2a00} .th-lag{background:var(--lagging)}
+  .th-culture{background:#005587} .th-lead2{background:#8a4b00} .th-cap{background:#5f6b1a}
+  .tierbody{padding:8px;min-height:40px}
+  .tierbody.empty{color:#c2c2c2;font-size:10px;font-style:italic;text-align:center;padding:14px 8px}
+  .co-mini{border:1px solid var(--line);border-radius:5px;padding:7px 8px;margin-bottom:6px;background:#fafafa}
+  .co-mini:last-child{margin-bottom:0}
+  .co-mini .cn{font-size:11px;font-weight:800;color:#141414;display:flex;justify-content:space-between;align-items:center}
+  .co-mini .cn .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .co-mini .story{font-size:10px;color:#3a3a3a;margin-top:3px;line-height:1.4}
+  .co-mini .src{font-size:8.5px;color:var(--muted);margin-top:3px}
+  .co-mini .src a{color:var(--dl-bluedk);text-decoration:none;border-bottom:1px dotted var(--dl-bluedk)}
+
+  .foot{margin-top:16px;padding:12px 16px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--dl-dark);
+    border-radius:6px;font-size:10.5px;color:var(--muted)}
+  .foot b{color:#141414}
+  .backlink{display:inline-block;margin-top:16px;font-size:12px;color:var(--dl-dark);font-weight:700;text-decoration:none}
+  @media(max-width:960px){.tiers4{grid-template-columns:1fr 1fr}.tiers3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="deck">
+  <h1>Metric Evidence Registry <span>| Every Metric &times; Every Company</span></h1>
+  <p class="sub">Organized by <b>metric first</b>, not company &mdash; the axis needed to build a Leader/Strong/Emerging/Lagging slide per metric. Each company card shows the single strongest story for that specific metric, condensed from the full evidence in the company-organized registry. All 9 metrics covered; no legacy M10&ndash;M12 numbering. Every claim re-verified against a live source before inclusion here.</p>
+
+  <div class="keybar">
+    <span><span class="sw" style="background:var(--leader)"></span>Leader</span>
+    <span><span class="sw" style="background:var(--strong)"></span>Strong</span>
+    <span><span class="sw" style="background:var(--emerging)"></span>Emerging</span>
+    <span><span class="sw" style="background:var(--lagging)"></span>Lagging</span>
+    <span style="margin-left:auto"><span class="dot" style="background:var(--hi)"></span>🟢 independent / analyst / peer-reviewed</span>
+    <span><span class="dot" style="background:var(--mid)"></span>🟡 vendor case / company disclosure</span>
+  </div>
+
+  <div class="nav">
+    <a href="#m1">M1 Platform Reuse</a><a href="#m2">M2 Modularity</a><a href="#m3">M3 Config &amp; Thread</a>
+    <a href="#m4">M4 SDV &amp; HW-SW</a><a href="#m5">M5 OTA</a><a href="#m6">M6 Integrated Svcs</a>
+    <a href="#m7">M7 Speed/TTV</a><a href="#m8">M8 Enablers</a><a href="#m9">M9 Feature-Driven</a>
+  </div>
+
+  <!-- M1 -->
+  <div class="metric" id="m1">
+    <div class="mhead"><span class="mnum">METRIC 1</span><span class="mname">Platform Reuse &amp; Reuse Economics</span></div>
+    <div class="mdef">Systemic reuse of physical/informational assets across programs — and whether that reuse is genuine or nominal.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--mid)"></span></div><div class="story">TNGA targets 70&ndash;80% part commonality across 6 platform variants, subcompact to full-size.</div><div class="src"><a href="https://www.motortrend.com/news/toyota-new-global-architecture-mass-car-building" target="_blank">Motor Trend</a></div></div>
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--mid)"></span></div><div class="story">MQB achieves 70&ndash;80% part sharing across A- through D-segment vehicles.</div><div class="src"><a href="https://www.thetruthaboutcars.com/2013/04/bernstein-vw-wont-realize-big-savings-from-mqb/" target="_blank">TTAC / Morgan Stanley</a></div></div>
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--hi)"></span></div><div class="story">Cell-to-Body: 40,500 Nm/deg torsional stiffness, 10&ndash;15mm body-height cut. Peer-reviewed review confirms the mechanism.</div><div class="src"><a href="https://www.ubs.com/global/en/investment-bank/insights-and-data/2023/byd-teardown.html" target="_blank">UBS teardown</a></div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--hi)"></span></div><div class="story">Gigacasting removes 360 fewer parts vs. a traditionally-built vehicle; 2024 pullback shows a real ceiling.</div><div class="src"><a href="https://www.teslarati.com/tesla-intense-work-culture-frenetic-pace-attracts-young-job-seekers/" target="_blank">Caresoft / Automotive News</a></div></div>
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--hi)"></span></div><div class="story">Over 80 common modules span every segment (hatchback to full-size SUV/pickup and Genesis flagships); 9 standardized battery packs, 5 standardized motors. Independently repeated across 5 outlets.</div><div class="src">Hyundai Motor Way Investor Day 2023</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody empty">No metric-1 cell rated Emerging yet</div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody empty">No metric-1 cell rated Lagging yet</div></div>
+    </div>
+  </div>
+
+  <!-- M2 -->
+  <div class="metric" id="m2">
+    <div class="mhead"><span class="mnum">METRIC 2</span><span class="mname">Modularity</span></div>
+    <div class="mdef">The architectural precondition for reuse — decoupled, recombinable modules with defined interfaces.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--mid)"></span></div><div class="story">8-in-1 powertrain spans hatchback, crossover, and sports-sedan body styles from one e-Platform 3.0 kit.</div><div class="src"><a href="https://insideevs.com/news/502427/byd-eplatform3-ea1-x-dream/" target="_blank">InsideEVs</a></div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--mid)"></span></div><div class="story">Standardized seat-height positions let coupes, sedans, and SUVs share one interior component set.</div><div class="src">Toyota UK Magazine</div></div>
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--mid)"></span></div><div class="story">20% lower production/tooling cost per unit from standardized architecture.</div><div class="src">Grokipedia synthesis of VW disclosures</div></div>
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--hi)"></span></div><div class="story">13 dedicated EV models across Hyundai/Kia/Genesis share the IMA module set through 2030 &mdash; widest cross-brand span in the set.</div><div class="src"><a href="https://insideevs.com/news/672898/hyundai-targeting-10percent-margins-future-evs-new-ima-platform/" target="_blank">Hyundai Investor Day 2023</a></div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--hi)"></span></div><div class="story">Down to 3 core models in 2026 (S/X discontinued) &mdash; missing the 3-row SUV and midsize-truck segments entirely. Scope choice, not failure.</div><div class="src">S&amp;P Global Mobility, via CarsDirect</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody empty">No metric-2 cell rated Lagging yet</div></div>
+    </div>
+  </div>
+
+  <!-- M3 -->
+  <div class="metric" id="m3">
+    <div class="mhead"><span class="mnum">METRIC 3</span><span class="mname">Configuration Management &amp; Digital Thread</span></div>
+    <div class="mdef">Whether product definition lives in one connected, live model with disciplined variant governance.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody empty">No metric-3 cell rated Leader yet</div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--mid)"></span></div><div class="story">Full-vehicle model load cut from 3 hrs to 15 min via Dassault 3DEXPERIENCE migration.</div><div class="src"><a href="https://www.3ds.com/insights/customer-stories/nio" target="_blank">Dassault Syst&egrave;mes</a></div></div>
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--mid)"></span></div><div class="story">Siemens Teamcenter deployed enterprise-wide across 45,000 users (K-PDM project) &mdash; broadest scope in the set, but source is dated (2008).</div><div class="src">Digital Engineering 24/7</div></div>
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--mid)"></span></div><div class="story">Virtual Factory digital twin: collision checks cut from 4 weeks to 3 days across 30+ plants.</div><div class="src"><a href="https://www.press.bmwgroup.com/global/article/detail/T0450699EN/bmw-group-scales-virtual-factory?language=en" target="_blank">BMW Group press release</a></div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--mid)"></span></div><div class="story">Aras PLM digital-thread pilot replaced file-based data &mdash; but scoped to one engineering division (Toyota Motor Europe vehicle dynamics), not company-wide.</div><div class="src">Aras case study</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody empty">No metric-3 cell rated Lagging yet</div></div>
+    </div>
+  </div>
+
+  <!-- M4 -->
+  <div class="metric" id="m4">
+    <div class="mhead"><span class="mnum">METRIC 4</span><span class="mname">SDV Maturity &amp; HW&ndash;SW Integration</span></div>
+    <div class="mdef">Unified, software-addressable vehicle architecture vs. distributed legacy-ECU design. Widest tier spread of any metric.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--hi)"></span></div><div class="story">#1 of 24, Gartner Digital Automaker Index, 79.3%, 3rd consecutive year. Also #1, IMD 2026 (100.0).</div><div class="src"><a href="https://www.autofuture.tw/EN/articles/detail?id=557" target="_blank">Gartner / Auto Future</a></div></div>
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--hi)"></span></div><div class="story">ET9 was the only vehicle industry-wide to reach Level 5, S&amp;P Global Mobility's SDV Capability Framework. #2, Gartner (77%).</div><div class="src">S&amp;P Global Mobility / Gartner</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--hi)"></span></div><div class="story">#2, IMD Future Readiness 2026 (96.0); R&amp;D intensity growing at 23.35% CAGR.</div><div class="src">IMD Future Readiness Indicator</div></div>
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--mid)"></span></div><div class="story">Neue Klasse: first ground-up SDV architecture &mdash; too new for independent rankings yet.</div><div class="src">BMW Group iFACTORY disclosures</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--mid)"></span></div><div class="story">2022-announced SDV-by-2025 roadmap, reaffirmed 2025 &mdash; real capital, but every figure is self-disclosed; no independent index places it in the leading tier.</div><div class="src">Hyundai / PRNewswire</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--hi)"></span></div><div class="story">First meaningful OTA-capable model only in 2026 RAV4. CEO Sato: must reshape toward software to stay competitive.</div><div class="src"><a href="https://www.motortrend.com/news/toyota-new-global-architecture-mass-car-building" target="_blank">InsideEVs / Motor1</a></div></div>
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--hi)"></span></div><div class="story">Cariad losses exceed $7.5B (2023&ndash;24); paid Rivian $5.8B for software access. Best-corroborated Lagging cell on the board.</div><div class="src">InsideEVs / Forbes</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- M5 -->
+  <div class="metric" id="m5">
+    <div class="mhead"><span class="mnum">METRIC 5</span><span class="mname">Over-the-Air Updates</span></div>
+    <div class="mdef">Breadth (beyond infotainment) and cadence of OTA — the delivery channel, distinct from the architecture (M4) that enables it.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--mid)"></span></div><div class="story">$1.73B deferred revenue tied to FSD/connectivity/OTA features (2019 10-K).</div><div class="src">SEC EDGAR</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--mid)"></span></div><div class="story">DiLink OTA infrastructure ships across the e-Platform 3.0 lineup (vendor-disclosed, thin).</div><div class="src">BYD product documentation</div></div>
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--mid)"></span></div><div class="story">Regular OTA across NOMI assistant and ADAS stack (vendor-disclosed, thin).</div><div class="src">NIO product communications</div></div>
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--mid)"></span></div><div class="story">Shopfloor.Digital OTA-updatable across 30+ plants &mdash; manufacturing-IT OTA, narrower claim than vehicle-software OTA.</div><div class="src">BMW Group disclosures</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody empty">No metric-5 cell rated Emerging yet</div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--hi)"></span></div><div class="story">Same 2026 RAV4 finding as M4 &mdash; no Toyota model shipped meaningful OTA before it. Flagged as reused evidence, not independent confirmation.</div><div class="src">InsideEVs</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- M6 -->
+  <div class="metric" id="m6">
+    <div class="mhead"><span class="mnum">METRIC 6</span><span class="mname">Integrated Services</span></div>
+    <div class="mdef">Monetization depth of connected/subscription services — the commercial layer OTA and SDV maturity make possible.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--mid)"></span></div><div class="story">Same $1.73B deferred-revenue disclosure as M5, read as commercial layer rather than delivery channel.</div><div class="src">SEC 10-K</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--hi)"></span></div><div class="story">Battery-swap network hit a 4-year-high 21% margin on services revenue in Q1 2026 &mdash; converted a capex drain into real recurring revenue.</div><div class="src">Yahoo Finance / NIO financials</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--hi)"></span></div><div class="story">Functions on Demand heated-seat subscription ($18/mo) triggered public backlash, suspended 2023. ConnectedDrive survives and reportedly grew.</div><div class="src">TechCrunch / Edmunds</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--hi)"></span></div><div class="story">Removed nearly all Bluelink subscription fees in 2023 &mdash; a deliberate choice not to monetize, not a capability gap.</div><div class="src">Hyundai Motor America / PRNewswire</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- M7 -->
+  <div class="metric" id="m7">
+    <div class="mhead"><span class="mnum">METRIC 7</span><span class="mname">Speed / Time-to-Value</span></div>
+    <div class="mdef">Concept-to-SOP elapsed time and reliance on virtual vs. physical validation.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--mid)"></span></div><div class="story">"Unboxed" modular assembly process targets up to 50% lower production cost for the next-gen platform.</div><div class="src">Tesla investor communications</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--hi)"></span></div><div class="story">52.8% 3-yr revenue CAGR, inventory turnover 6.17 &mdash; an operating-speed proxy, not a direct time-to-market metric.</div><div class="src">IMD Future Readiness Indicator</div></div>
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--mid)"></span></div><div class="story">Model-load time proxy (3hrs&rarr;15min) &mdash; reflects review speed, not full concept-to-SOP program time.</div><div class="src">Dassault Syst&egrave;mes case</div></div>
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--hi)"></span></div><div class="story">IMA projected to cut development time by up to 30% via standardized wiring and shared modules.</div><div class="src">Hyundai Investor Day 2023</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody empty">No metric-7 cell rated Emerging yet</div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--hi)"></span></div><div class="story">Porsche Macan EV and Audi Q6 e-tron delayed over a year past original SOP target &mdash; a direct time-to-value failure.</div><div class="src">InsideEVs / Forbes</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- M8 -->
+  <div class="metric" id="m8">
+    <div class="mhead"><span class="mnum">METRIC 8</span><span class="mname">Transformation Enablers</span></div>
+    <div class="mdef">Not rated Leader&rarr;Lagging — a qualitative archetype of what actually drove each company's transformation, including the real cost of each model.</div>
+    <div class="tiers3">
+      <div class="tiercol"><div class="tierhead th-culture">CULTURE / TALENT-LED</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--hi)"></span></div><div class="story">Musk's own standard: "extremely hardcore," 50&ndash;100hr weeks; real worker-safety allegations tied to output pressure.</div><div class="src">Fortune / Notebookcheck</div></div>
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--hi)"></span></div><div class="story">Internal slogan "compete, learn, help, rush, surpass" (&#27604;&#23398;&#24110;&#36214;&#36229;) structures public rankings, modeled on exam-hall discipline. Current 2026 labor scrutiny in Hungary.</div><div class="src">Made in China Journal / CNBC</div></div>
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--mid)"></span></div><div class="story">Community/lifestyle brand (NIO House) sits beside real volatility: "two rounds of layoffs just to survive" (2019); 10,600 cut in 2025.</div><div class="src">CnEVPost / Yahoo Finance</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lead2">LEADERSHIP-MANDATED</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Toyota<span class="dot" style="background:var(--hi)"></span></div><div class="story">Chief Engineer ("shusa") system: total accountability, no direct authority &mdash; "responsibility without authority." Real historical failure mode (1957 Crown export) too.</div><div class="src">Lean Enterprise Institute</div></div>
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--mid)"></span></div><div class="story">Institutional caution traces to a 1959 near-bankruptcy/near-Mercedes-takeover &mdash; "running scared for years." Institutional, not founder-driven.</div><div class="src">Edmondson (2006)</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-cap">CAPITAL / FINANCE-FORCED</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--hi)"></span></div><div class="story">Codetermination is German law: half the supervisory board is worker representatives. Board just rejected a 100,000-job restructuring plan (2026, current).</div><div class="src">Washington Post / Seoul Economic Daily</div></div>
+        <div class="co-mini"><div class="cn">Hyundai<span class="dot" style="background:var(--mid)"></span></div><div class="story">Family-controlled chaebol: Chung family drives capital decisions directly, enabling the &gt;$80B IMA bet &mdash; concentrated authority draws real governance criticism.</div><div class="src">Forbes / Foreign Policy</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- M9 -->
+  <div class="metric" id="m9">
+    <div class="mhead"><span class="mnum">METRIC 9</span><span class="mname">Feature-Driven Definition</span></div>
+    <div class="mdef">Whether product definition is organized around customer-perceivable features vs. a part-first structure.</div>
+    <div class="tiers4">
+      <div class="tiercol"><div class="tierhead">LEADER</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">Tesla<span class="dot" style="background:var(--hi)"></span></div><div class="story">Gartner's highest marks in "culture and leadership" category; OTA feature monetization is the commercial signature.</div><div class="src">Gartner / SEC 10-K</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-str">STRONG</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">NIO<span class="dot" style="background:var(--hi)"></span></div><div class="story">Battery as a Service since 2020, extended to flexible daily/monthly range upgrades &mdash; a core capability sold as a decoupled, on-demand feature.</div><div class="src">NIO / CnEVPost</div></div>
+        <div class="co-mini"><div class="cn">BMW<span class="dot" style="background:var(--hi)"></span></div><div class="story">Functions on Demand: standardize hardware at the factory, differentiate purely through software license, across 7 markets.</div><div class="src">Autovista24</div></div>
+        <div class="co-mini"><div class="cn">BYD<span class="dot" style="background:var(--mid)"></span></div><div class="story">IMD credits compounding capability-building (batteries&rarr;drivetrains&rarr;systems) &mdash; a systems reading, not yet a feature-catalog one. Thin, softest rating in the set.</div><div class="src">IMD commentary</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-emg">EMERGING</div><div class="tierbody">
+        <div class="co-mini"><div class="cn">VW<span class="dot" style="background:var(--hi)"></span></div><div class="story">&euro;5.6B invested in E&sup3; 2.0 service-oriented architecture &mdash; real enabling infrastructure, not yet a governing feature catalog in production.</div><div class="src">SDV market report / IoT Analytics</div></div>
+      </div></div>
+      <div class="tiercol"><div class="tierhead th-lag">LAGGING</div><div class="tierbody empty">No metric-9 cell rated Lagging yet</div></div>
+    </div>
+  </div>
+
+  <div class="foot"><b>Coverage:</b> all 9 current metrics (M1&ndash;M9) represented; no legacy M10&ndash;M12 numbering carried over. <b>Methodology:</b> each entry is the single strongest story for that company on that specific metric, condensed from the fuller multi-point evidence in the company-organized registry (benchmarking-evidence-detail.html) &mdash; that file remains the place to see every supporting point and its individual confidence tier. A sample of claims (Gartner index specifics) was independently re-verified via fresh search before this registry was built. Ford is excluded from all cells &mdash; baseline pending Step 5, no internal figure quoted before validation.</div>
+
+  <a class="backlink" href="benchmarking-heatmap.html" target="_blank">&larr; Back to the heat-map</a>
+</div>
+</body>
+</html>
